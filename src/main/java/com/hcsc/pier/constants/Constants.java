@@ -4,7 +4,7 @@ public interface Constants {
 
 	public static final String USER_NAME = "username";
 	public static final String USER_PASSWORD = "password";
-	public static final String USER_RESPONSE_MSG = "User Details are not matched please check.";
+	public static final String USER_RESPONSE_MSG = "User Login Details are not matched please check.";
 	public static final String USER_REQUEST_LOCKED = "User locked due to security reasons. Please try next day.";
 	public static final Integer USER_MAX_FAIL_ENTRY = 3;
 	

@@ -27,7 +27,6 @@ public class UserService {
 				}
 				user.setFailedAttempts(failedAttemps+1);
 				userDao.save(user);
-				System.out.println("Failed Attempts :: "+user.getFailedAttempts());
 				return null;
 			}
 		}
@@ -40,7 +39,7 @@ public class UserService {
 		if (userAvailability == null) {
 			User newUser = new User();
 			newUser.setUsername(newUserDetails.get(Constants.USER_NAME));
-			newUser.setPassword(newUserDetails.get(Constants.USER_PASSWORD).toUpperCase());
+			newUser.setPassword(newUserDetails.get(Constants.USER_PASSWORD));
 			newUser.setUserId(newUserDetails.get(Constants.USER_SSN).toUpperCase());
 			newUser.setUserBlocked(false);
 			newUser.setFailedAttempts(0);
@@ -58,7 +57,6 @@ public class UserService {
 		User userAvailability = userDao.findByUserId(newUserDetails.get(Constants.USER_SSN).toUpperCase());
 		if (userAvailability != null) {
 			if(userAvailability.getPassword().equalsIgnoreCase(newUserDetails.get(Constants.CONFIRM_NEW_USER_PASSWORD))) {
-				System.out.println("check :: "+userAvailability.getPassword().equalsIgnoreCase(newUserDetails.get(Constants.CONFIRM_NEW_USER_PASSWORD)));
 				return false;
 			}
 			else {

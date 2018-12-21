@@ -37,6 +37,10 @@ public class UserController {
 				|| userDetails.get(Constants.USER_PASSWORD) == null) {
 			return new ResponseEntity<Object>(HttpStatus.UNAUTHORIZED);
 		}
+		if (userDetails.get(Constants.USER_NAME).equalsIgnoreCase("")
+				|| userDetails.get(Constants.USER_PASSWORD).equalsIgnoreCase("")) {
+			return new ResponseEntity<Object>(HttpStatus.UNAUTHORIZED);
+		}
 		User availableUser = userService.findUser(userDetails);
 		if (availableUser != null) {
 			if (availableUser.getUserBlocked()) {
@@ -61,6 +65,11 @@ public class UserController {
 				|| newUserDetails.get(Constants.USER_SSN) == null) {
 			return new ResponseEntity<>(Constants.USER_DETAILS_MISSING, HttpStatus.NOT_ACCEPTABLE);
 		}
+		if (newUserDetails.get(Constants.USER_NAME).equalsIgnoreCase("")
+				|| newUserDetails.get(Constants.USER_PASSWORD).equalsIgnoreCase("")
+				|| newUserDetails.get(Constants.USER_SSN).equalsIgnoreCase("")) {
+			return new ResponseEntity<>(Constants.USER_DETAILS_MISSING, HttpStatus.NOT_ACCEPTABLE);
+		}
 		if (userService.createUser(newUserDetails)) {
 			return new ResponseEntity<>(Constants.USER_CREATED, HttpStatus.OK);
 		}
@@ -69,19 +78,26 @@ public class UserController {
 
 	@PutMapping(value = "changePassword", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	public ResponseEntity<Object> changePassword(@RequestParam Map<String, String> newUserDetails) {
-		if (newUserDetails == null || newUserDetails.get(Constants.USER_SSN) == null 
-				||newUserDetails.get(Constants.USER_PASSWORD) == null
+		if (newUserDetails == null || newUserDetails.get(Constants.USER_SSN) == null
+				|| newUserDetails.get(Constants.USER_PASSWORD) == null
 				|| newUserDetails.get(Constants.CONFIRM_NEW_USER_PASSWORD) == null
 				|| newUserDetails.get(Constants.CONFIRM_USER_PASSWORD) == null) {
 			return new ResponseEntity<>(Constants.USER_DETAILS_MISSING, HttpStatus.NOT_ACCEPTABLE);
 		}
-		if(newUserDetails.get(Constants.USER_PASSWORD).
-				equalsIgnoreCase(newUserDetails.get(Constants.CONFIRM_NEW_USER_PASSWORD))) {
+		if (newUserDetails.get(Constants.USER_SSN).equalsIgnoreCase("")
+				|| newUserDetails.get(Constants.USER_PASSWORD).equalsIgnoreCase("")
+				|| newUserDetails.get(Constants.CONFIRM_NEW_USER_PASSWORD).equalsIgnoreCase("")
+				|| newUserDetails.get(Constants.CONFIRM_USER_PASSWORD).equalsIgnoreCase("")) {
+			return new ResponseEntity<>(Constants.USER_DETAILS_MISSING, HttpStatus.NOT_ACCEPTABLE);
+		}
+		if (newUserDetails.get(Constants.USER_PASSWORD)
+				.equalsIgnoreCase(newUserDetails.get(Constants.CONFIRM_NEW_USER_PASSWORD))) {
 			return new ResponseEntity<>(Constants.USER_OLD_NEW_PASSWORD_NOT_MATCHED, HttpStatus.NOT_ACCEPTABLE);
 		}
-		if(!newUserDetails.get(Constants.CONFIRM_NEW_USER_PASSWORD)
+		if (!newUserDetails.get(Constants.CONFIRM_NEW_USER_PASSWORD)
 				.equalsIgnoreCase(newUserDetails.get(Constants.CONFIRM_USER_PASSWORD))) {
-			return new ResponseEntity<>(Constants.USER_NEW_PASSWORD_CONFIRM_PASSWORD_NOT_MATCHED, HttpStatus.NOT_ACCEPTABLE);
+			return new ResponseEntity<>(Constants.USER_NEW_PASSWORD_CONFIRM_PASSWORD_NOT_MATCHED,
+					HttpStatus.NOT_ACCEPTABLE);
 		}
 		if (userService.changePassword(newUserDetails)) {
 			return new ResponseEntity<>(HttpStatus.OK);
